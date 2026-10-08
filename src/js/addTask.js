@@ -1,12 +1,12 @@
 const createTaskButton = document.getElementById("createTaskButton")
 const taskList = document.getElementById("taskList")
 
-function createCard() {
+function createTaskCard(task) {
     const li = document.createElement('li');
     li.className = 'taskCard';
 
     const h2 = document.createElement('h2');
-    h2.textContent = '1.';
+    h2.textContent = task?.id ?? "?";
 
     const input = document.createElement('input');
     input.maxLength = 30;
@@ -26,7 +26,25 @@ function createCard() {
     return li;
 }
 
-createTaskButton.addEventListener("click", (event) => {
-   taskList.appendChild(createCard());
-   console.log(taskList.parentElement);
+async function createTask() {
+    const response = await fetch("http://localhost:3000/postTasks",
+        {
+            method: 'POST',
+            headers: {
+               'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify({
+                id : 1
+            })
+        }
+    )
+    const data = await response.json();
+    return data;
+}
+
+createTaskButton.addEventListener("click", async (event) => {
+   // taskList.appendChild(createTaskCard());
+   const task = await createTask();
+   const cardTask = createTaskCard(task)
+   taskList.appendChild(cardTask);
 })
