@@ -68,7 +68,7 @@ main header {
     border: none;
 }
 
-.createTaskButton {
+.createButton {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
     align-self: last baseline;
     margin-right: 14px;
@@ -87,7 +87,7 @@ main header {
     transition: all .3s ease;
 }
 
-.createTaskButton:hover{
+.createButton:hover{
     transform: translateY(-2px);
     box-shadow: 0 0 30px rgba(11, 255, 19, 0.965);
 }
