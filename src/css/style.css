@@ -19,7 +19,7 @@ main {
     width: clamp(490px, 26vw, 600px);
     padding: 10px;
     display: flex;
-    gap: 30px;
+    gap: 14px;
     flex-direction: column;
     justify-content: initial;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)
@@ -68,7 +68,31 @@ main header {
     border: none;
 }
 
-input[type="checkbox"]{
+.createTaskButton {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+    align-self: last baseline;
+    margin-right: 14px;
+    width: 2.6rem;
+    height: 2.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    font-size: 2rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 100%;
+    background-color: rgb(18, 229, 18);
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+.createTaskButton:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(11, 255, 19, 0.965);
+}
+
+input[type="checkbox"] {
     height: 1.26rem;
     width: 1.26rem;
     cursor: pointer;
