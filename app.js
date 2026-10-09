@@ -26,6 +26,13 @@ app.post("/postTasks", (req, res) => {
     })
 })
 
+app.patch("/updateTasks", (req, res) => {
+    const taskId = req.body.id
+    const taskContent = req.body.content
+    const task = tasks.find((task) => task.id === taskId) 
+    task.content = taskContent;
+})
+
 app.listen(3000, () => {
     console.log("Iniciou porta");
 })
