@@ -1,23 +1,28 @@
 import express from 'express';
 import cors from 'cors';
 
+const tasks = [
+   {id : 1, content: ""}
+]
+    
+
 const app = express();
 
 app.use(cors())
 
 app.use(express.json());
 
-app.get("/getTasks", () => {
-    console.log("A");
+app.get("/getTasks", (req, res) => {
+    res.json(tasks)
 })
 
 app.post("/postTasks", (req, res) => {
-    console.log(req);
-    const body = req?.body;
-    const task = body?.task;
-    console.log(task);
+    tasks.push({
+        id : tasks?.length + 1,
+        content: "",
+    })
     res.json({
-        id : 67,
+        id : tasks?.length,
     })
 })
 

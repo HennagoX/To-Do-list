@@ -13,11 +13,11 @@ function createTaskCard(task) {
     input.placeholder = 'Digite sua tarefa aqui...';
     input.className = 'taskInput';
     input.required = true;
+    input.textContent = task.content ?? "";
 
     const checkbox = document.createElement('input');
     checkbox.className = 'taskCheck';
     checkbox.type = 'checkbox';
-    checkbox.checked = true;
 
     li.appendChild(h2);
     li.appendChild(input);
@@ -31,20 +31,33 @@ async function createTask() {
         {
             method: 'POST',
             headers: {
-               'Content-Type' : 'application/json'
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                id : 1
-            })
+            body: JSON.stringify({})
         }
     )
     const data = await response.json();
     return data;
 }
 
+async function getTasks() {
+    const response = await fetch("http://localhost:3000/getTasks")
+    const data = await response.json();
+    return data;
+}
+
 createTaskButton.addEventListener("click", async (event) => {
-   // taskList.appendChild(createTaskCard());
-   const task = await createTask();
-   const cardTask = createTaskCard(task)
-   taskList.appendChild(cardTask);
+    // taskList.appendChild(createTaskCard());
+    const task = await createTask();
+    if (!task) return;
+    const cardTask = createTaskCard(task)
+    taskList.appendChild(cardTask);
 })
+
+document.addEventListener("DOMContentLoaded", () => {
+    
+})
+
+getTasks()
+
+taskList.appendChild(getTasks());
