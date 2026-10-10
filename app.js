@@ -1,26 +1,53 @@
 import express from 'express';
 import cors from 'cors';
+import fs from "fs/promises"
 
-const tasks = []
+let tasks = []
 
 const app = express();
+
+async function getTasks() {
+    const data = await fs.readFile("tasks.json", "utf8")
+    tasks = JSON.parse(data);
+    return JSON.parse(data);
+}
+
+async function postTask() {
+    const data = await fs.readFile("tasks.json", "utf8")
+    tasks = JSON.parse(data)
+    tasks.push({
+        id: tasks?.length + 1,
+        content: ""
+    })
+    console.log(tasks)
+    const sucess = await fs.writeFile("tasks.json", JSON.stringify(tasks, null, 2), "utf8")
+    return sucess
+}
 
 app.use(cors())
 
 app.use(express.json());
 
-app.get("/getTasks", (req, res) => {
-    res.json(tasks)
+app.get("/getTasks", async (req, res) => {
+    const data = await getTasks()
+    console.log(data)
+    res.json(data)
 })
 
-app.post("/postTasks", (req, res) => {
-    tasks.push({
-        id: tasks?.length + 1,
-        content: "",
-    })
-    res.json({
-        id: tasks?.length,
-    })
+app.post("/postTasks", async (req, res) => {
+    try {
+        if (tasks.length >= 20) res.json({ message: "Atingido o limite de 20 tarefas!" });
+
+        const sucess = await postTask()
+console.log(sucess)
+        res.json({
+            id: tasks?.length
+        })
+
+    }
+    catch (err) {
+        console.error(err);
+    }
 })
 
 app.patch("/updateTasks", (req, res) => {
@@ -33,7 +60,7 @@ app.patch("/updateTasks", (req, res) => {
     res.json({
         id: task.id,
         content: task.content,
-        checked : task.checked
+        checked: task.checked
     })
 })
 

@@ -72,9 +72,9 @@ function createTaskCard(task) {
 
     const inputContainer = document.createElement("div")
     inputContainer.className = "inputContainer"
-    if (task.checked){
-    inputContainer.classList.add("checked")
-    input.disabled = true
+    if (task.checked) {
+        inputContainer.classList.add("checked")
+        input.disabled = true
     }
     inputContainer.appendChild(input);
 
@@ -133,7 +133,7 @@ function createTaskCard(task) {
         task.checked = checkbox.checked;
         updateTask(task)
         inputContainer.classList.toggle("checked", checkbox.checked)
-            input.disabled = checkbox.checked
+        input.disabled = checkbox.checked
     })
 
     li.appendChild(h2);

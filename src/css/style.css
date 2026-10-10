@@ -101,10 +101,15 @@ main header {
     box-shadow: 0 0 30px rgba(11, 255, 19, 0.965);
 }
 
+.createButton:active {
+    transform: scale(1.08);
+}
+
 .btn-excluir {
     border: none;
     color: rgb(255, 31, 31);
     cursor: pointer;
+    transition: transform .2s;
 }
 
 .btn-excluir:hover {
