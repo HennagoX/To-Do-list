@@ -63,7 +63,8 @@ app.post("/api/tasks", async (req, res) => {
 
         const sucess = await postTask()
         res.json({
-            id: tasks?.length
+            id: tasks?.length,
+            content: ""
         })
 
     }
