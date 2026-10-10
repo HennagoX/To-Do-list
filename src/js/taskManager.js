@@ -1,5 +1,6 @@
 const createTaskButton = document.getElementById("createTaskButton")
 const taskList = document.getElementById("taskList")
+const searchInput = document.getElementById("searchInput")
 
 const tasksLIMIT = 20
 let tasksCount = 0
@@ -57,6 +58,7 @@ async function deleteTask(id) {
 
 function createTaskCard(task) {
     const li = document.createElement('li');
+    li.id = `taskCard${task.id}`
     li.className = 'taskCard';
 
     const h2 = document.createElement('h2');
@@ -173,3 +175,35 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 })
 
+
+searchInput.addEventListener("blur", () => {
+    const searchTerm = searchInput.value
+    tasks.forEach((value, originalIndex) => {
+        const taskCard = document.getElementById(`taskCard${originalIndex + 1}`);
+
+        if (!taskCard) return; 
+
+        if (value.content.includes(searchTerm)) {
+            taskCard.style.display = "flex";  
+        } else {
+            taskCard.style.display = "none";  
+        }
+    });
+})
+
+searchInput.addEventListener("keydown" , (event) => {
+    if (event.key == "Enter") { 
+const searchTerm = searchInput.value
+    tasks.forEach((value, originalIndex) => {
+        const taskCard = document.getElementById(`taskCard${originalIndex + 1}`);
+
+        if (!taskCard) return; 
+
+        if (value.content.includes(searchTerm)) {
+            taskCard.style.display = "flex";  
+        } else {
+            taskCard.style.display = "none";  
+        }
+    });
+    }
+})

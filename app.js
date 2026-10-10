@@ -3,6 +3,7 @@ import cors from 'cors';
 import fs from "fs/promises"
 
 let tasks = []
+const tasksLIMIT = 20
 
 const app = express();
 
@@ -58,7 +59,7 @@ app.get("/getTasks", async (req, res) => {
 
 app.post("/postTasks", async (req, res) => {
     try {
-        if (tasks.length >= 20) res.json({ message: "Atingido o limite de 20 tarefas!" });
+        if (tasks.length >= tasksLIMIT) res.json({ message: "Atingido o limite de 20 tarefas!" });
 
         const sucess = await postTask()
         res.json({
