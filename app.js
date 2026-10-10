@@ -12,60 +12,25 @@ async function getTasks() {
     return JSON.parse(data);
 }
 
+
 async function postTask() {
-    const data = await fs.readFile("tasks.json", "utf8")
-    tasks = JSON.parse(data)
     tasks.push({
-        id: tasks?.length + 1,
+        id: tasks.length + 1,
         content: ""
-    })
-    console.log(tasks)
-    const sucess = await fs.writeFile("tasks.json", JSON.stringify(tasks, null, 2), "utf8")
-    return sucess
+    });
+
+    await fs.writeFile("tasks.json", JSON.stringify(tasks, null, 2), "utf8");
 }
 
-app.use(cors())
-
-app.use(express.json());
-
-app.get("/getTasks", async (req, res) => {
-    const data = await getTasks()
-    console.log(data)
-    res.json(data)
-})
-
-app.post("/postTasks", async (req, res) => {
-    try {
-        if (tasks.length >= 20) res.json({ message: "Atingido o limite de 20 tarefas!" });
-
-        const sucess = await postTask()
-console.log(sucess)
-        res.json({
-            id: tasks?.length
-        })
-
-    }
-    catch (err) {
-        console.error(err);
-    }
-})
-
-app.patch("/updateTasks", (req, res) => {
-    const taskId = req.body.id
-    const taskContent = req.body.content
-    const taskChecked = req.body.checked
-    const task = tasks.find((task) => task.id === taskId)
+async function updateTask(taskId, taskContent, taskChecked) {
+    const task = tasks.find((task) => task?.id === taskId)
     task.content = taskContent;
     task.checked = taskChecked;
-    res.json({
-        id: task.id,
-        content: task.content,
-        checked: task.checked
-    })
-})
+    await fs.writeFile("tasks.json", JSON.stringify(tasks, null, 2), "utf8");
+    return task;
+}
 
-app.delete("/deleteTasks/:id", (req, res) => {
-    const taskId = Number(req.params.id)
+async function deleteTask(taskId) {
     const index = tasks.findIndex((task) => task.id === taskId)
 
     if (index === -1) {
@@ -78,6 +43,55 @@ app.delete("/deleteTasks/:id", (req, res) => {
     tasks.forEach((task, taskIndex) => {
         task.id = taskIndex + 1
     })
+
+    await fs.writeFile("tasks.json", JSON.stringify(tasks, null, 2), "utf8");
+}
+
+app.use(cors())
+
+app.use(express.json());
+
+app.get("/getTasks", async (req, res) => {
+    const data = await getTasks()
+    res.json(data)
+})
+
+app.post("/postTasks", async (req, res) => {
+    try {
+        if (tasks.length >= 20) res.json({ message: "Atingido o limite de 20 tarefas!" });
+
+        const sucess = await postTask()
+        res.json({
+            id: tasks?.length
+        })
+
+    }
+    catch (err) {
+        console.error(err);
+    }
+})
+
+app.patch("/updateTasks", async (req, res) => {
+    try {
+        const taskId = req.body.id
+        const taskContent = req.body.content
+        const taskChecked = req.body.checked
+        const task = await updateTask(taskId, taskContent, taskChecked);
+
+        res.json({
+            id: task.id,
+            content: task.content,
+            checked: task.checked
+        })
+    }
+    catch (err) {
+        console.error(err);
+    }
+})
+
+app.delete("/deleteTasks/:id", async (req, res) => {
+    const taskId = Number(req.params.id)
+    await deleteTask(taskId)
     res.status(204).end()
 })
 
