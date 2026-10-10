@@ -1,7 +1,7 @@
 const createTaskButton = document.getElementById("createTaskButton")
 const taskList = document.getElementById("taskList")
 const tasksLIMIT = 20
-let tasksCount = 0;
+let tasksCount = 0
 
 
 async function getTasks() {
@@ -51,12 +51,11 @@ function createTaskCard(task) {
     input.placeholder = 'Digite sua tarefa aqui...';
     input.className = 'taskInput';
     input.required = true;
-    input.textContent = task.content ?? "";
+    input.value = task.content ?? "";
 
     input.addEventListener("blur", () => {
-     task.content = input.value;
-            console.log(input.value)
-            updateTask(task)
+        task.content = input.value;
+        updateTask(task)
     })
 
     input.addEventListener("keydown", (event) => {
@@ -77,7 +76,7 @@ function createTaskCard(task) {
     return li;
 }
 
-createTaskButton.addEventListener("click", async (event) => {
+createTaskButton?.addEventListener("click", async (event) => {
     if (tasksCount >= tasksLIMIT) {
         return;
     }
@@ -86,18 +85,17 @@ createTaskButton.addEventListener("click", async (event) => {
     const task = await createTask();
     if (!task) return;
     const cardTask = createTaskCard(task)
-    taskList.appendChild(cardTask);
+    taskList?.appendChild(cardTask);
 })
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {
         const data = await getTasks()
         data.forEach(task => {
-            console.log(task)
             if (!task) return;
             tasksCount += 1;
             const cardTask = createTaskCard(task)
-            taskList.appendChild(cardTask);
+            taskList?.appendChild(cardTask);
         });
     }
     catch (err) {
