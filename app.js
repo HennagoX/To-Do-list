@@ -52,12 +52,12 @@ app.use(cors())
 
 app.use(express.json());
 
-app.get("/getTasks", async (req, res) => {
+app.get("/api/tasks", async (req, res) => {
     const data = await getTasks()
     res.json(data)
 })
 
-app.post("/postTasks", async (req, res) => {
+app.post("/api/tasks", async (req, res) => {
     try {
         if (tasks.length >= tasksLIMIT) res.json({ message: "Atingido o limite de 20 tarefas!" });
 
@@ -72,9 +72,9 @@ app.post("/postTasks", async (req, res) => {
     }
 })
 
-app.patch("/updateTasks", async (req, res) => {
+app.patch("/api/tasks/:id", async (req, res) => {
     try {
-        const taskId = req.body.id
+        const taskId = Number(req.params.id)
         const taskContent = req.body.content
         const taskChecked = req.body.checked
         const task = await updateTask(taskId, taskContent, taskChecked);
@@ -90,7 +90,7 @@ app.patch("/updateTasks", async (req, res) => {
     }
 })
 
-app.delete("/deleteTasks/:id", async (req, res) => {
+app.delete("/api/tasks/:id", async (req, res) => {
     const taskId = Number(req.params.id)
     await deleteTask(taskId)
     res.status(204).end()

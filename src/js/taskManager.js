@@ -8,13 +8,13 @@ let tasksCount = 0
 const tasks = []
 
 async function getTasks() {
-    const response = await fetch("http://localhost:3000/getTasks")
+    const response = await fetch("http://localhost:3000/api/tasks")
     const data = await response.json();
     return data;
 }
 
 async function createTask() {
-    const response = await fetch("http://localhost:3000/postTasks",
+    const response = await fetch("http://localhost:3000/api/tasks",
         {
             method: 'POST',
             headers: {
@@ -28,13 +28,12 @@ async function createTask() {
 }
 
 async function updateTask(task) {
-    const response = await fetch("http://localhost:3000/updateTasks", {
+    const response = await fetch(`http://localhost:3000/api/tasks/${task.id}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            id: task.id,
             content: task.content,
             checked: task.checked
         })
@@ -42,7 +41,7 @@ async function updateTask(task) {
 }
 
 async function deleteTask(id) {
-    const response = await fetch(`http://localhost:3000/deleteTasks/${id}`, {
+    const response = await fetch(`http://localhost:3000/api/tasks/${id}`, {
         method: "DELETE"
     })
 
@@ -177,33 +176,33 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 searchInput.addEventListener("blur", () => {
-    const searchTerm = searchInput.value
-    tasks.forEach((value, originalIndex) => {
+    const searchTerm = searchInput.value.toLowerCase().trim()
+    tasks.forEach((task, originalIndex) => {
         const taskCard = document.getElementById(`taskCard${originalIndex + 1}`);
+        const originalContent = task.content.trim().toLowerCase()
+        if (!taskCard) return;
 
-        if (!taskCard) return; 
-
-        if (value.content.includes(searchTerm)) {
-            taskCard.style.display = "flex";  
+        if (originalContent.includes(searchTerm)) {
+            taskCard.style.display = "flex";
         } else {
-            taskCard.style.display = "none";  
+            taskCard.style.display = "none";
         }
     });
 })
 
-searchInput.addEventListener("keydown" , (event) => {
-    if (event.key == "Enter") { 
-const searchTerm = searchInput.value
-    tasks.forEach((value, originalIndex) => {
-        const taskCard = document.getElementById(`taskCard${originalIndex + 1}`);
+searchInput.addEventListener("keydown", (event) => {
+    if (event.key == "Enter") {
+        const searchTerm = searchInput.value.trim().toLowerCase()
+        tasks.forEach((task, originalIndex) => {
+            const taskCard = document.getElementById(`taskCard${originalIndex + 1}`);
+            const originalContent = task.content.trim().toLowerCase()
+            if (!taskCard) return;
 
-        if (!taskCard) return; 
-
-        if (value.content.includes(searchTerm)) {
-            taskCard.style.display = "flex";  
-        } else {
-            taskCard.style.display = "none";  
-        }
-    });
+            if (originalContent.includes(searchTerm)) {
+                taskCard.style.display = "flex";
+            } else {
+                taskCard.style.display = "none";
+            }
+        });
     }
 })
