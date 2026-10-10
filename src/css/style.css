@@ -87,9 +87,19 @@ main header {
     transition: all .3s ease;
 }
 
-.createButton:hover{
+.createButton:hover {
     transform: translateY(-2px);
     box-shadow: 0 0 30px rgba(11, 255, 19, 0.965);
+}
+
+.btn-excluir {
+    border: none;
+    color: rgb(255, 31, 31);
+    cursor: pointer;
+}
+
+.btn-excluir:hover {
+    transform: translateY(-2px);
 }
 
 input[type="checkbox"] {

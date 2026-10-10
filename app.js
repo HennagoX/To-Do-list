@@ -2,9 +2,8 @@ import express from 'express';
 import cors from 'cors';
 
 const tasks = [
-   {id : 1, content: ""}
 ]
-    
+
 
 const app = express();
 
@@ -18,19 +17,40 @@ app.get("/getTasks", (req, res) => {
 
 app.post("/postTasks", (req, res) => {
     tasks.push({
-        id : tasks?.length + 1,
+        id: tasks?.length + 1,
         content: "",
     })
     res.json({
-        id : tasks?.length,
+        id: tasks?.length,
     })
 })
 
 app.patch("/updateTasks", (req, res) => {
     const taskId = req.body.id
     const taskContent = req.body.content
-    const task = tasks.find((task) => task.id === taskId) 
+    const task = tasks.find((task) => task.id === taskId)
     task.content = taskContent;
+    res.json({
+        id: task.id,
+        content: task.content
+    })
+})
+
+app.delete("/deleteTasks/:id", (req, res) => {
+    const taskId = Number(req.params.id)
+    const index = tasks.findIndex((task) => task.id === taskId)
+
+    if (index === -1) {
+        return res.status(404).json({
+            mensagem: "Tarefa não encontrada"
+        })
+    }
+
+    tasks.splice(index, 1)
+    tasks.forEach((task, taskIndex) => {
+        task.id = taskIndex + 1
+    })
+    res.status(204).end()
 })
 
 app.listen(3000, () => {
