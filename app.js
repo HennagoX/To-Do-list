@@ -1,9 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 
-const tasks = [
-]
-
+const tasks = []
 
 const app = express();
 
@@ -28,11 +26,14 @@ app.post("/postTasks", (req, res) => {
 app.patch("/updateTasks", (req, res) => {
     const taskId = req.body.id
     const taskContent = req.body.content
+    const taskChecked = req.body.checked
     const task = tasks.find((task) => task.id === taskId)
     task.content = taskContent;
+    task.checked = taskChecked;
     res.json({
         id: task.id,
-        content: task.content
+        content: task.content,
+        checked : task.checked
     })
 })
 

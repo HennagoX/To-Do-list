@@ -34,7 +34,8 @@ async function updateTask(task) {
         },
         body: JSON.stringify({
             id: task.id,
-            content: task.content
+            content: task.content,
+            checked: task.checked
         })
     })
 }
@@ -44,7 +45,6 @@ async function deleteTask(id) {
         method: "DELETE"
     })
 
-
     if (response.status === 204) return;
 
     if (!response.ok) {
@@ -52,7 +52,6 @@ async function deleteTask(id) {
     }
 
     return true;
-
 
 }
 
@@ -63,6 +62,7 @@ function createTaskCard(task) {
     const h2 = document.createElement('h2');
     h2.textContent = Number(task?.id) ?? "?";
 
+
     const input = document.createElement('input');
     input.maxLength = 30;
     input.placeholder = 'Digite sua tarefa aqui...';
@@ -70,20 +70,17 @@ function createTaskCard(task) {
     input.required = true;
     input.value = task.content ?? "";
 
-    input.addEventListener("blur", () => {
-        task.content = input.value;
-        updateTask(task)
-    })
-
-    input.addEventListener("keydown", (event) => {
-        if (event.key == "Enter") {
-            task.content = input.value;
-            updateTask(task)
-        }
-    })
+    const inputContainer = document.createElement("div")
+    inputContainer.className = "inputContainer"
+    if (task.checked){
+    inputContainer.classList.add("checked")
+    input.disabled = true
+    }
+    inputContainer.appendChild(input);
 
     const checkbox = document.createElement('input');
     checkbox.className = 'taskCheck';
+    checkbox.checked = task.checked ?? false;
     checkbox.type = 'checkbox';
 
     const btnExcluir = document.createElement("button");
@@ -97,6 +94,19 @@ function createTaskCard(task) {
                         <path d="M3 6h18" />
                         <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
                     </svg>`
+
+
+    input.addEventListener("blur", () => {
+        task.content = input.value;
+        updateTask(task)
+    })
+
+    input.addEventListener("keydown", (event) => {
+        if (event.key == "Enter") {
+            task.content = input.value;
+            updateTask(task)
+        }
+    })
 
     btnExcluir.addEventListener("click", async (event) => {
         try {
@@ -115,15 +125,21 @@ function createTaskCard(task) {
             })
         }
         catch (err) {
-            console.log(err)
+            console.error(err)
         }
     })
 
+    checkbox.addEventListener("change", (event) => {
+        task.checked = checkbox.checked;
+        updateTask(task)
+        inputContainer.classList.toggle("checked", checkbox.checked)
+            input.disabled = checkbox.checked
+    })
+
     li.appendChild(h2);
-    li.appendChild(input);
+    li.appendChild(inputContainer);
     li.appendChild(checkbox);
     li.appendChild(btnExcluir);
-
     return li;
 }
 
@@ -149,11 +165,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             const cardTask = createTaskCard(task)
             tasks.push(task)
             taskList?.appendChild(cardTask);
-            console.log(tasks)
         });
     }
     catch (err) {
-        console.log("Erro ao carregar tarefas: ", err)
+        console.error("Erro ao carregar tarefas: ", err)
     }
 
 })
