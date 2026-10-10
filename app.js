@@ -7,7 +7,7 @@ let tasks = []
 const app = express();
 
 async function getTasks() {
-    const data = await fs.readFile("tasks.json", "utf8")
+    const data = await fs.readFile("data/tasks.json", "utf8")
     tasks = JSON.parse(data);
     return JSON.parse(data);
 }
@@ -19,14 +19,14 @@ async function postTask() {
         content: ""
     });
 
-    await fs.writeFile("tasks.json", JSON.stringify(tasks, null, 2), "utf8");
+    await fs.writeFile("data/tasks.json", JSON.stringify(tasks, null, 2), "utf8");
 }
 
 async function updateTask(taskId, taskContent, taskChecked) {
     const task = tasks.find((task) => task?.id === taskId)
     task.content = taskContent;
     task.checked = taskChecked;
-    await fs.writeFile("tasks.json", JSON.stringify(tasks, null, 2), "utf8");
+    await fs.writeFile("data/tasks.json", JSON.stringify(tasks, null, 2), "utf8");
     return task;
 }
 
@@ -44,7 +44,7 @@ async function deleteTask(taskId) {
         task.id = taskIndex + 1
     })
 
-    await fs.writeFile("tasks.json", JSON.stringify(tasks, null, 2), "utf8");
+    await fs.writeFile("data/tasks.json", JSON.stringify(tasks, null, 2), "utf8");
 }
 
 app.use(cors())

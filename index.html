@@ -16,12 +16,18 @@
             <p>Crie suas tarefas.</p>
         </header>
 
-        <button class="createButton" id="createTaskButton">
-            +
-        </button>
+        <div style="display: flex; flex-direction: row; gap: 10px; justify-content: center; align-items: center; ">
+            <div class="inputContainer"
+                style="width: 70%; margin-right: 20px; background-color: rgba(6, 6, 6, 0.398); ">
+                <input class="taskInput">
+            </div>
+            <button class="createButton" id="createTaskButton">
+                +
+            </button>
+        </div>
 
         <ul class="taskList" id="taskList">
-                <!--
+            <!--
             <li class="taskCard">
                 <h2>?</h2>
                 <input type="text" class="taskInput" maxlength="30" placeholder="Digite sua tarefa aqui..." required
