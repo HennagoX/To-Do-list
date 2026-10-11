@@ -7,7 +7,7 @@ export async function getTasksDB() {
 }
 
 export async function createTaskDB(position) {
-  const connectInstance = await connection.connect()
+  const connectInstance = connection
   const result = await connectInstance.query(
     "INSERT INTO task (content, checked, position) VALUES ($1, $2, $3) RETURNING *",
     ["", false, position]
