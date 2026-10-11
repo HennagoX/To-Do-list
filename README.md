@@ -58,6 +58,13 @@ npm install
 
 Crie um arquivo `.env` seguindo o exemplo de `example_env.txt` e configure as variáveis de ambiente.
 
+Certifique-se de que o PostgreSQL esteja em execução e crie o banco de dados com o nome configurado no `.env`.
+
+Execute as migrations para criar a estrutura do banco:
+```bash
+npm run migrate up
+```
+
 Em seguida, inicie a API:
 
 ```bash

@@ -1,0 +1,6 @@
+CREATE TABLE task(
+    id SERIAL PRIMARY KEY,
+    content VARCHAR(30) NOT NULL DEFAULT '',
+    position INTEGER NOT NULL,
+    checked BOOLEAN NOT NULL DEFAULT FALSE
+)

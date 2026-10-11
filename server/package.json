@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "dev" : "node app.js"
+    "dev": "node app.js",
+    "migrate": "node-pg-migrate"
   },
   "keywords": [],
   "author": "",
@@ -17,5 +18,8 @@
     "pg": "^8.23.1",
     "react": "^19.3.0",
     "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "node-pg-migrate": "^9.0.0"
   }
 }
