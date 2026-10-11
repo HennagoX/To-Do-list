@@ -1,52 +1,11 @@
+import { getTasks, postTask, updateTask, deleteTask } from './src/server/tasksService.js';
+import { taskSchema, updateTaskSchema } from "./src/server/schemas/taskSchema.js";
 import express from 'express';
 import cors from 'cors';
-import fs from "fs/promises"
 
-let tasks = []
 const tasksLIMIT = 20
 
 const app = express();
-
-async function getTasks() {
-    const data = await fs.readFile("data/tasks.json", "utf8")
-    tasks = JSON.parse(data);
-    return JSON.parse(data);
-}
-
-
-async function postTask() {
-    tasks.push({
-        id: tasks.length + 1,
-        content: ""
-    });
-
-    await fs.writeFile("data/tasks.json", JSON.stringify(tasks, null, 2), "utf8");
-}
-
-async function updateTask(taskId, taskContent, taskChecked) {
-    const task = tasks.find((task) => task?.id === taskId)
-    task.content = taskContent;
-    task.checked = taskChecked;
-    await fs.writeFile("data/tasks.json", JSON.stringify(tasks, null, 2), "utf8");
-    return task;
-}
-
-async function deleteTask(taskId) {
-    const index = tasks.findIndex((task) => task.id === taskId)
-
-    if (index === -1) {
-        return res.status(404).json({
-            mensagem: "Tarefa não encontrada"
-        })
-    }
-
-    tasks.splice(index, 1)
-    tasks.forEach((task, taskIndex) => {
-        task.id = taskIndex + 1
-    })
-
-    await fs.writeFile("data/tasks.json", JSON.stringify(tasks, null, 2), "utf8");
-}
 
 app.use(cors())
 
@@ -59,28 +18,31 @@ app.get("/api/tasks", async (req, res) => {
 
 app.post("/api/tasks", async (req, res) => {
     try {
-        if (tasks.length >= tasksLIMIT) res.json({ message: "Atingido o limite de 20 tarefas!" });
+        const tasks = await getTasks();
+        if (tasks.length >= tasksLIMIT) {
+            return res.status(409).json({ message: "Atingido o limite de 20 tarefas!" });
+        }
 
-        const sucess = await postTask()
-        res.json({
-            id: tasks?.length,
-            content: ""
-        })
+        const task = await postTask();
+        return res.status(201).json(task);
 
     }
     catch (err) {
         console.error(err);
+        return res.status(500).json({ message: "Erro ao criar tarefa" });
     }
 })
 
 app.patch("/api/tasks/:id", async (req, res) => {
     try {
+        updateTaskSchema.parse(req?.body);
         const taskId = Number(req.params.id)
-        const taskContent = req.body.content
-        const taskChecked = req.body.checked
-        const task = await updateTask(taskId, taskContent, taskChecked);
+        const task = await updateTask(taskId, req.body);
+        if (!task) {
+            return res.status(404).json({ message: "Tarefa não encontrada" });
+        }
 
-        res.json({
+        return res.json({
             id: task.id,
             content: task.content,
             checked: task.checked
@@ -88,13 +50,23 @@ app.patch("/api/tasks/:id", async (req, res) => {
     }
     catch (err) {
         console.error(err);
+        return res.status(500).json({ message: "Erro ao atualizar tarefa" });
     }
 })
 
 app.delete("/api/tasks/:id", async (req, res) => {
-    const taskId = Number(req.params.id)
-    await deleteTask(taskId)
-    res.status(204).end()
+    try {
+        const taskId = Number(req.params.id)
+        const deleted = await deleteTask(taskId)
+        if (!deleted) {
+            return res.status(404).json({ message: "Tarefa não encontrada" });
+        }
+        return res.status(204).end()
+    }
+    catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Erro ao excluir tarefa" });
+    }
 })
 
 app.listen(3000, () => {

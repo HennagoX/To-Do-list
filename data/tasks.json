@@ -1,14 +1,12 @@
 [
   {
     "id": 1,
-    "content": "awd"
+    "content": "awdwaa",
+    "checked": true
   },
   {
     "id": 2,
-    "content": ""
-  },
-  {
-    "id": 3,
-    "content": ""
+    "content": "",
+    "checked": false
   }
 ]
