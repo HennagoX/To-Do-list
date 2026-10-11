@@ -1,3 +1,5 @@
+import { getTasks, createTask, updateTask, deleteTask } from "./api.js"
+
 const createTaskButton = document.getElementById("createTaskButton")
 const taskList = document.getElementById("taskList")
 const searchInput = document.getElementById("searchInput")
@@ -6,54 +8,6 @@ const tasksLIMIT = 20
 let tasksCount = 0
 
 const tasks = []
-
-async function getTasks() {
-    const response = await fetch("http://localhost:3000/api/tasks")
-    const data = await response.json();
-    return data;
-}
-
-async function createTask() {
-    const response = await fetch("http://localhost:3000/api/tasks",
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({})
-        }
-    )
-    const data = await response.json();
-    return data;
-}
-
-async function updateTask(task) {
-    const response = await fetch(`http://localhost:3000/api/tasks/${task.id}`, {
-        method: "PATCH",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            content: task.content,
-            checked: task.checked
-        })
-    })
-}
-
-async function deleteTask(id) {
-    const response = await fetch(`http://localhost:3000/api/tasks/${id}`, {
-        method: "DELETE"
-    })
-
-    if (response.status === 204) return;
-
-    if (!response.ok) {
-        throw new Error('Erro ao excluir tarefa')
-    }
-
-    return true;
-
-}
 
 function createTaskCard(task) {
     const li = document.createElement('li');
