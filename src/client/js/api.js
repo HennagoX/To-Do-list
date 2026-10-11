@@ -7,7 +7,7 @@ async function readResponse(response) {
             const body = await response.json();
             if (body.message) message = body.message;
         } catch {
-            // A resposta de erro pode não conter JSON.
+
         }
         throw new Error(message);
     }

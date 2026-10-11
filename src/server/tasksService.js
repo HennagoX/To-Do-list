@@ -10,7 +10,6 @@ async function postTask() {
         (highest, task) => Math.max(highest, task.position ?? 0),
         0
     ) + 1;
-console.log(position);
     return createTaskDB(position);
 }
 

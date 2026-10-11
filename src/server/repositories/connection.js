@@ -1,15 +1,17 @@
+import dotenv from "dotenv"
 import { Pool } from "pg";
 
-export default function getDB() {
-   const pool = new Pool({
-      user: "todo_app",
-      host: "localhost",
-      database: "todo_list",
-      password: "ricoboby112",
-      port: 5432,
+dotenv.config();
+
+ const pool = new Pool({
+      user: process.env.DB_USER,
+      host: process.env.DB_HOST,
+      database: process.env.DB_NAME,
+      password: process.env.DB_PASSWORD,
+      port: process.env.DB_PORT,
       max: 20,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 2000
    })
-   return pool;
-}
+
+export default pool;

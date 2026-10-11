@@ -1,23 +1,24 @@
 import connection from "./connection.js"
 
 export async function getTasksDB() {
-  const connectInstance = connection()
+  const connectInstance = connection
   const tasks = await connectInstance.query("SELECT * FROM task ORDER BY position, id");
   return tasks.rows
 }
 
 export async function createTaskDB(position) {
-  const connectInstance = connection()
+  const connectInstance = await connection.connect()
   const result = await connectInstance.query(
     "INSERT INTO task (content, checked, position) VALUES ($1, $2, $3) RETURNING *",
     ["", false, position]
   );
+
   return result.rows[0];
 }
 
 export async function updateTaskDB(id, content, checked) {
 
-  const connectInstance = connection()
+  const connectInstance = connection
   const result = await connectInstance.query(
     `UPDATE task SET content=$1, checked=$2 WHERE id=$3 RETURNING *`,
     [content, checked, id])
@@ -25,7 +26,7 @@ export async function updateTaskDB(id, content, checked) {
 }
 
 export async function deleteTaskDB(id) {
-  const connectInstance = connection()
+  const connectInstance = connection
   const result = await connectInstance.query(
     `DELETE FROM task WHERE id=$1`,
     [id])
