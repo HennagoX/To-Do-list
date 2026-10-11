@@ -1,48 +1,31 @@
-import fs from "node:fs/promises";
-
-let tasks = []
-const tasksFile = new URL("../../data/tasks.json", import.meta.url)
+import { getTasksDB, createTaskDB, updateTaskDB, deleteTaskDB } from './repositories/taskRepository.js';
 
 async function getTasks() {
-    const data = await fs.readFile(tasksFile, "utf8")
-    tasks = JSON.parse(data);
-    return tasks;
+    return getTasksDB();
 }
 
 async function postTask() {
-    const task = {
-        id: tasks.length + 1,
-        content: "",
-        checked: false
-    };
-    tasks.push(task);
-
-    await fs.writeFile(tasksFile, JSON.stringify(tasks, null, 2), "utf8");
-    return task;
+    const tasks = await getTasksDB();
+    const position = tasks.reduce(
+        (highest, task) => Math.max(highest, task.position ?? 0),
+        0
+    ) + 1;
+console.log(position);
+    return createTaskDB(position);
 }
 
 async function updateTask(taskId, changes) {
+    const tasks = await getTasksDB();
     const task = tasks.find((task) => task?.id === taskId)
     if (!task) return null;
 
-    if (Object.hasOwn(changes, "content")) task.content = changes.content;
-    if (Object.hasOwn(changes, "checked")) task.checked = changes.checked;
-    await fs.writeFile(tasksFile, JSON.stringify(tasks, null, 2), "utf8");
-    return task;
+    const updatedTask = { ...task, ...changes };
+
+    return updateTaskDB(taskId, updatedTask.content, updatedTask.checked);
 }
 
 async function deleteTask(taskId) {
-    const index = tasks.findIndex((task) => task.id === taskId)
-
-    if (index === -1) return false;
-
-    tasks.splice(index, 1)
-    tasks.forEach((task, taskIndex) => {
-        task.id = taskIndex + 1
-    })
-
-    await fs.writeFile(tasksFile, JSON.stringify(tasks, null, 2), "utf8");
-    return true;
+    return deleteTaskDB(taskId);
 }
 
 export { getTasks, postTask, updateTask, deleteTask };

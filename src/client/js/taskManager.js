@@ -4,8 +4,7 @@ const createTaskButton = document.getElementById("createTaskButton")
 const taskList = document.getElementById("taskList")
 const searchInput = document.getElementById("searchInput")
 
-const tasksLIMIT = 20
-let tasksCount = 0
+const tasksLimit = 20
 
 const tasks = []
 
@@ -15,7 +14,7 @@ function createTaskCard(task) {
     li.className = 'taskCard';
 
     const h2 = document.createElement('h2');
-    h2.textContent = Number(task?.id) ?? "?";
+    h2.textContent = "?";
 
 
     const input = document.createElement('input');
@@ -51,44 +50,56 @@ function createTaskCard(task) {
                     </svg>`
 
 
-    input.addEventListener("blur", () => {
-        task.content = input.value;
-        updateTask(task)
-    })
+    async function saveContent() {
+        const previousContent = task.content ?? "";
+        const nextContent = input.value;
+        if (nextContent === previousContent) return;
 
-    input.addEventListener("keydown", (event) => {
-        if (event.key == "Enter") {
-            task.content = input.value;
-            updateTask(task)
-        }
-    })
-
-    btnExcluir.addEventListener("click", async (event) => {
+        task.content = nextContent;
         try {
-            const sucess = await deleteTask(task.id)
-            if (sucess === false) { throw new Error("Não foi possível deletar a tarefa!") }
+            await updateTask(task);
+        } catch (err) {
+            task.content = previousContent;
+            input.value = previousContent;
+            console.error("Erro ao atualizar tarefa:", err);
+        }
+    }
+
+    input.addEventListener("blur", saveContent);
+    input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") input.blur();
+    });
+
+    btnExcluir.type = "button";
+    btnExcluir.setAttribute("aria-label", "Excluir tarefa");
+    btnExcluir.addEventListener("click", async () => {
+        try {
+            await deleteTask(task.id);
             li.remove()
             const taskIndex = tasks.findIndex((currentTask) => currentTask.id === task.id)
             if (taskIndex !== -1) tasks.splice(taskIndex, 1)
-            tasksCount = tasks.length
-            tasks.forEach((currentTask, index) => {
-                currentTask.id = index + 1
-            })
-            taskList.querySelectorAll(".taskCard").forEach((value, index) => {
-                const idText = value.querySelector("h2");
-                idText.textContent = index + 1
-            })
+            updateTaskOrder();
+            updateCreateButtonState();
         }
         catch (err) {
-            console.error(err)
+            console.error("Erro ao excluir tarefa:", err)
         }
     })
 
-    checkbox.addEventListener("change", (event) => {
+    checkbox.addEventListener("change", async () => {
+        const previousChecked = task.checked ?? false;
         task.checked = checkbox.checked;
-        updateTask(task)
         inputContainer.classList.toggle("checked", checkbox.checked)
         input.disabled = checkbox.checked
+        try {
+            await updateTask(task);
+        } catch (err) {
+            task.checked = previousChecked;
+            checkbox.checked = previousChecked;
+            inputContainer.classList.toggle("checked", previousChecked);
+            input.disabled = previousChecked;
+            console.error("Erro ao atualizar tarefa:", err);
+        }
     })
 
     li.appendChild(h2);
@@ -98,65 +109,67 @@ function createTaskCard(task) {
     return li;
 }
 
+function updateCreateButtonState() {
+    if (createTaskButton) createTaskButton.disabled = tasks.length >= tasksLimit;
+}
+
+function updateTaskOrder() {
+    tasks.forEach((task, index) => {
+        const card = document.getElementById(`taskCard${task.id}`);
+        const position = card?.querySelector("h2");
+        if (position) position.textContent = index + 1;
+    });
+}
+
 createTaskButton?.addEventListener("click", async (event) => {
-    if (tasksCount >= tasksLIMIT) {
-        return;
+    if (tasks.length >= tasksLimit) return;
+
+    createTaskButton.disabled = true;
+    try {
+        const task = await createTask();
+        tasks.push(task);
+        taskList?.appendChild(createTaskCard(task));
+        updateTaskOrder();
+        applySearch();
+    } catch (err) {
+        console.error("Erro ao criar tarefa:", err);
+    } finally {
+        updateCreateButtonState();
     }
-    // taskList.appendChild(createTaskCard());
-    tasksCount += 1;
-    const task = await createTask();
-    if (!task) return;
-    const cardTask = createTaskCard(task)
-    tasks.push(task)
-    taskList?.appendChild(cardTask);
 })
 
-document.addEventListener("DOMContentLoaded", async () => {
+async function loadTasks() {
     try {
         const data = await getTasks()
         data.forEach(task => {
             if (!task) return;
-            tasksCount += 1;
-            const cardTask = createTaskCard(task)
             tasks.push(task)
-            taskList?.appendChild(cardTask);
+            taskList?.appendChild(createTaskCard(task));
         });
+        updateTaskOrder();
+        updateCreateButtonState();
+        applySearch();
     }
     catch (err) {
         console.error("Erro ao carregar tarefas: ", err)
     }
+}
 
-})
-
-
-searchInput.addEventListener("blur", () => {
-    const searchTerm = searchInput.value.toLowerCase().trim()
+function applySearch() {
+    const searchTerm = searchInput?.value.toLowerCase().trim() ?? "";
     tasks.forEach((task, originalIndex) => {
-        const taskCard = document.getElementById(`taskCard${originalIndex + 1}`);
-        const originalContent = task.content.trim().toLowerCase()
+        const taskCard = document.getElementById(`taskCard${task.id}`);
+        const originalContent = (task.content ?? "").trim().toLowerCase()
         if (!taskCard) return;
 
-        if (originalContent.includes(searchTerm)) {
-            taskCard.style.display = "flex";
-        } else {
-            taskCard.style.display = "none";
-        }
+        taskCard.style.display = originalContent.includes(searchTerm) ? "" : "none";
     });
-})
+}
 
-searchInput.addEventListener("keydown", (event) => {
-    if (event.key == "Enter") {
-        const searchTerm = searchInput.value.trim().toLowerCase()
-        tasks.forEach((task, originalIndex) => {
-            const taskCard = document.getElementById(`taskCard${originalIndex + 1}`);
-            const originalContent = task.content.trim().toLowerCase()
-            if (!taskCard) return;
+searchInput?.addEventListener("input", applySearch);
 
-            if (originalContent.includes(searchTerm)) {
-                taskCard.style.display = "flex";
-            } else {
-                taskCard.style.display = "none";
-            }
-        });
-    }
-})
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", loadTasks, { once: true });
+} else {
+    loadTasks();
+}

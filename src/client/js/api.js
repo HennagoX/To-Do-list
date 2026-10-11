@@ -1,25 +1,33 @@
+const TASKS_URL = "http://localhost:3000/api/tasks";
+
+async function readResponse(response) {
+    if (!response.ok) {
+        let message = `Falha na requisição (${response.status})`;
+        try {
+            const body = await response.json();
+            if (body.message) message = body.message;
+        } catch {
+            // A resposta de erro pode não conter JSON.
+        }
+        throw new Error(message);
+    }
+
+    if (response.status === 204) return null;
+    return response.json();
+}
+
 export async function getTasks() {
-    const response = await fetch("http://localhost:3000/api/tasks")
-    const data = await response.json();
-    return data;
+    const response = await fetch(TASKS_URL);
+    return readResponse(response);
 }
 
 export async function createTask() {
-    const response = await fetch("http://localhost:3000/api/tasks",
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({})
-        }
-    )
-    const data = await response.json();
-    return data;
+    const response = await fetch(TASKS_URL, { method: "POST" });
+    return readResponse(response);
 }
 
 export async function updateTask(task) {
-    const response = await fetch(`http://localhost:3000/api/tasks/${task.id}`, {
+    const response = await fetch(`${TASKS_URL}/${task.id}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
@@ -28,20 +36,12 @@ export async function updateTask(task) {
             content: task.content,
             checked: task.checked
         })
-    })
+    });
+    return readResponse(response);
 }
 
 export async function deleteTask(id) {
-    const response = await fetch(`http://localhost:3000/api/tasks/${id}`, {
-        method: "DELETE"
-    })
-
-    if (response.status === 204) return;
-
-    if (!response.ok) {
-        throw new Error('Erro ao excluir tarefa')
-    }
-
+    const response = await fetch(`${TASKS_URL}/${id}`, { method: "DELETE" });
+    await readResponse(response);
     return true;
-
 }
