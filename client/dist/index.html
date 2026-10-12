@@ -1,54 +1,39 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+
+<html>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo-List</title>
-  <script type="module" crossorigin src="/assets/index-Ca5ZiYcb.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-BLJrCXG5.css">
+  <script type="module" crossorigin src="/assets/index-DtZM_xrr.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DHgw0i3_.css">
 </head>
 
 <body>
-    <main>
-        <header>
-            <h1>TODO-LIST</h1>
-            <p>Crie suas tarefas.</p>
-        </header>
- 
-        <div style="display: flex; flex-direction: row; gap: 10px; justify-content: center; align-items: center; ">
-            <div class="inputContainer"
-                style="width: 70%; margin-right: 20px; background-color: rgba(6, 6, 6, 0.398); ">
-                <input class="taskInput" id="searchInput">
+    <main class="authContainer">
+        <section class="authSide loginSide" id="loginSide" aria-label="Acesso à conta">
+            <p class="authEyebrow">TODO-LIST</p>
+            <h2>Sua rotina, mais leve.</h2>
+            <p>Organize suas tarefas e tenha mais espaço para o que importa.</p>
+        </section>
+        <section class="authSide registerSide" id="registerSide" aria-label="Cadastro" hidden>
+            <p class="authEyebrow">TODO-LIST</p>
+            <h2>Comece com o que importa.</h2>
+            <p>Um passo de cada vez. Suas ideias e tarefas em um só lugar.</p>
+        </section>
+        <div class="authPanel" id="authPanel">
+            <div class="authPanelText" id="registerPrompt">
+                <h1>TODO-LIST</h1>
+                <p>Ainda não tem uma conta?</p>
+                <button class="authToggleButton" id="showRegisterButton" type="button">Se cadastrar</button>
             </div>
-            <button class="createButton" id="createTaskButton">
-                +
-            </button>
+            <div class="authPanelText" id="loginPrompt" hidden>
+                <h1>TODO-LIST</h1>
+                <p>Já tem uma conta?</p>
+                <button class="authToggleButton" id="showLoginButton" type="button">Fazer login</button>
+            </div>
         </div>
-
-        <ul class="taskList" id="taskList">
-            <!--
-            <li class="taskCard">
-                <h2>?</h2>
-                <input type="text" class="taskInput" maxlength="30" placeholder="Digite sua tarefa aqui..." required
-                    value="">
-                <input type="checkbox" class="taskCheck">
-          
-                <button type="button" class="btn-excluir" aria-label="Excluir tarefa">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="lucide lucide-trash preview-icon">
-                        <path d="M10 11v6" />
-                        <path d="M14 11v6" />
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                        <path d="M3 6h18" />
-                        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                    </svg>
-                </button>
-            </li>
-            -->
-        </ul>
-
     </main>
 </body>
 

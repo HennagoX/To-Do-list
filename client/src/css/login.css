@@ -1,0 +1,213 @@
+.authContainer {
+    position: relative;
+    display: flex;
+    width: min(100%, 920px);
+    height: clamp(440px, 72svh, 600px);
+    min-height: 0;
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    background: linear-gradient(140deg, var(--surface-raised), var(--surface));
+    box-shadow:
+        0 32px 90px rgba(0, 0, 0, 0.48),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 0 60px rgba(34, 211, 238, 0.08);
+}
+
+.authSide {
+    position: absolute;
+    top: 0;
+    display: flex;
+    width: 50%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: clamp(24px, 6vw, 72px);
+    isolation: isolate;
+    text-align: center;
+}
+
+.loginSide {
+    right: 0;
+}
+
+.registerSide {
+    left: 0;
+}
+
+.authSide[hidden],
+.authPanelText[hidden] {
+    display: none;
+}
+
+.authSide::before {
+    position: absolute;
+    z-index: -1;
+    width: 230px;
+    height: 230px;
+    border: 1px solid rgba(80, 227, 194, 0.15);
+    border-radius: 50%;
+    background:
+        radial-gradient(circle, rgba(80, 227, 194, 0.1), transparent 68%),
+        repeating-radial-gradient(circle, transparent 0 30px, rgba(80, 227, 194, 0.07) 31px 32px);
+    content: "";
+}
+
+.authEyebrow {
+    color: var(--accent);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+}
+
+.authSide h2 {
+    max-width: 340px;
+    color: #f2f8ff;
+    font-size: clamp(1.5rem, 3vw, 2.35rem);
+    font-weight: 750;
+    line-height: 1.15;
+}
+
+.authSide > p:last-child {
+    max-width: 340px;
+    color: var(--muted);
+    font-size: 0.98rem;
+    line-height: 1.7;
+}
+
+.authPanel {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    display: flex;
+    width: 50%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 26px;
+    background:
+        radial-gradient(ellipse at 15% 10%, rgba(255, 255, 255, 0.2), transparent 45%),
+        linear-gradient(145deg, #168f9e, #2563c7 55%, #5145b5);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+    transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.authPanel::before,
+.authPanel::after {
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+    content: "";
+    pointer-events: none;
+}
+
+.authPanel::before {
+    top: -100px;
+    right: -120px;
+    width: 280px;
+    height: 280px;
+}
+
+.authPanel::after {
+    right: -70px;
+    bottom: -150px;
+    width: 340px;
+    height: 340px;
+}
+
+.authPanelText {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 24px;
+    text-align: center;
+}
+
+.authPanelText h1 {
+    color: #fff;
+    font-size: clamp(1.45rem, 3vw, 2rem);
+    font-weight: 800;
+    letter-spacing: 0.12em;
+}
+
+.authPanelText p {
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.96rem;
+}
+
+.authToggleButton {
+    margin-top: 8px;
+    padding: 12px 22px;
+    border: 1px solid rgba(255, 255, 255, 0.68);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 650;
+    cursor: pointer;
+    transition: background 180ms ease, transform 180ms ease, border-color 180ms ease;
+}
+
+.authToggleButton:hover {
+    transform: translateY(-2px);
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.authPanel.registerMode {
+    transform: translateX(100%);
+}
+
+@media (max-width: 560px) {
+    .authContainer {
+        width: 100%;
+        height: min(76svh, 560px);
+        min-height: 420px;
+        border-radius: 22px;
+    }
+
+    .authSide {
+        gap: 12px;
+        padding: 20px;
+    }
+
+    .authSide::before {
+        width: 180px;
+        height: 180px;
+    }
+
+    .authSide > p:last-child {
+        font-size: 0.86rem;
+        line-height: 1.5;
+    }
+
+    .authPanel {
+        border-radius: 20px;
+    }
+
+    .authPanelText {
+        gap: 12px;
+        padding: 16px;
+    }
+
+    .authPanelText p {
+        font-size: 0.88rem;
+    }
+
+    .authToggleButton {
+        padding: 11px 16px;
+        font-size: 0.84rem;
+    }
+}
