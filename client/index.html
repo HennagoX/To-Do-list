@@ -1,23 +1,39 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo-List</title>
     <link rel="stylesheet" href="./src/css/themes.css">
-    <link rel="stylesheet" href="./src/css/style.css">
-    <link rel="stylesheet" href="./src/css/login.css">
+    <link rel="stylesheet" href="./src/css/base.css">
+    <link rel="stylesheet" href="./src/css/components/forms.css">
+    <link rel="stylesheet" href="./src/css/components/buttons.css">
+    <link rel="stylesheet" href="./src/css/pages/login.css">
     <script type="module" src="./src/js/login.js"></script>
 </head>
 
 <body>
     <main class="authContainer">
         <section class="authSide loginSide" id="loginSide" aria-label="Acesso à conta">
-            <p class="authEyebrow">TODO-LIST</p>
-            <h2>Bem-Vindo novamente</h2>
-            <p>Organize suas tarefas e tenha mais espaço para o que importa.</p>
+            <div class="sideText">
+                <p class="authEyebrow">TODO-LIST</p>
+                <h2>Bem-Vindo!</h2>
+                <p>Organize suas tarefas e tenha mais espaço para o que importa.</p>
+            </div>
+
+            <div class="sideTextsBox">
+                <div class="inputContainer">
+                    <input type="email" placeholder="Digite seu email" >
+                </div>
+
+                   <div class="inputContainer">
+                    <input  type="password" placeholder="Digite sua senha">
+                </div>
+
+            </div>
+
             <button class="btn">Entrar</button>
         </section>
         <section class="authSide registerSide" id="registerSide" aria-label="Cadastro" hidden>
