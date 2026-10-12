@@ -5,7 +5,7 @@ const registerPrompt = document.getElementById("registerPrompt")
 const loginPrompt = document.getElementById("loginPrompt")
 const loginSide = document.getElementById("loginSide")
 const registerSide = document.getElementById("registerSide")
-
+    
 showRegisterButton.addEventListener("click", () => {
     authPanel.classList.add("registerMode")
     registerPrompt.hidden = true
