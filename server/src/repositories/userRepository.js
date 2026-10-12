@@ -1,11 +1,11 @@
-import connection from "./connection";
+import connection from "./connection.js";
 
-export function getUsers() {
-    const users = connection.query("SELECT * FROM users")
+export async function getUsersDB() {
+    const users = await connection.query("SELECT * FROM users")
     return users.rows
 }
 
-export function postUser(name, email, password) {
-    const users = connection.query("INSERT INTO users(name, email, password) VALUES  ($1, $2, $3)", 
+export async function postUserDB(name, email, password) {
+   return await connection.query("INSERT INTO users(name, email, password) VALUES  ($1, $2, $3)", 
         [name, email, password])
 }

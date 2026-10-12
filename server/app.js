@@ -16,20 +16,28 @@ app.use(cors())
 app.use(express.json());
 
 app.get("/api/users", async (req, res) => {
-    const data = await getUers()
-    res.json(data)
+    try {
+        const data = await getUsers()
+        res.json(data)
+    }
+    catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Erro ao consultar tarefas" });
+    }
 })
 
 app.post("/api/users", async (req, res) => {
+    console.log(req.body);
     const body = req?.body;
-    const name = body?.nome;
+    const name = body?.name;
     const email = body?.email;
     const password = body?.password;
 
-    userSchema.parse(name, email, password)
+    userSchema.parse(body);
 
     const user = await postUser(name, email, password)
-    res.json(user)
+    if (!user) res.json({ sucess: false });
+    res.json({ sucess: true })
 })
 
 app.get("/api/tasks", async (req, res) => {
@@ -91,5 +99,5 @@ app.delete("/api/tasks/:id", async (req, res) => {
 })
 
 app.listen(3000, () => {
-    console.log("Iniciou porta");
+    console.log("Iniciou na porta : 3000");
 })
