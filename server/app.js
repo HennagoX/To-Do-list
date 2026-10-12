@@ -1,5 +1,9 @@
 import { getTasks, postTask, updateTask, deleteTask } from './src/tasksService.js';
+import { getUsers, postUser } from './src/usersService.js';
+
 import { taskSchema, updateTaskSchema } from "./src/schemas/taskSchema.js";
+import { userSchema } from "./src/schemas/userSchema.js";
+
 import express from 'express';
 import cors from 'cors';
 
@@ -10,6 +14,23 @@ const app = express();
 app.use(cors())
 
 app.use(express.json());
+
+app.get("/api/users", async (req, res) => {
+    const data = await getUers()
+    res.json(data)
+})
+
+app.post("/api/users", async (req, res) => {
+    const body = req?.body;
+    const name = body?.nome;
+    const email = body?.email;
+    const password = body?.password;
+
+    userSchema.parse(name, email, password)
+
+    const user = await postUser(name, email, password)
+    res.json(user)
+})
 
 app.get("/api/tasks", async (req, res) => {
     const data = await getTasks()
