@@ -9,8 +9,8 @@ export async function getTasksDB() {
 export async function createTaskDB(position) {
   const connectInstance = connection
   const result = await connectInstance.query(
-    "INSERT INTO task (content, checked, position) VALUES ($1, $2, $3) RETURNING *",
-    ["", false, position]
+    "INSERT INTO task (content, checked, position, userId) VALUES ($1, $2, $3, $4) RETURNING *",
+    ["", false, position, "Pedro@gmail.com"]
   );
 
   return result.rows[0];

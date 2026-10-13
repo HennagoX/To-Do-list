@@ -18,7 +18,7 @@ app.use(express.json());
 app.get("/api/users", async (req, res) => {
     try {
         const data = await getUsers()
-        res.json(data)
+        res.status(200).json(data)
     }
     catch (err) {
         console.error(err);
