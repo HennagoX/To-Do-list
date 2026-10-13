@@ -44,6 +44,7 @@
     box-shadow: 0 8px 24px rgba(34, 211, 238, 0.2);
     color: #fff;
     font-size: 1.7rem;
+    font-weight: 600;
     cursor: pointer;
     transition: transform 180ms ease;
 }

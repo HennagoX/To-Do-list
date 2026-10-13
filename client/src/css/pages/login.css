@@ -167,14 +167,26 @@
 .sideTextsBox {
     display: flex;
     width: 100%;
+    height: 70%;
     flex-direction: column;
-    gap: 6px;
+    gap: 12px;
 }
 
 .authSide .inputContainer {
     width: 100%;
     padding: 0.2rem;
     border-radius: 20px;
+}
+
+
+#cadastroForm{
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 @media (max-width: 560px) {

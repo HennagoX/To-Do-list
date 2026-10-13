@@ -27,17 +27,22 @@ app.get("/api/users", async (req, res) => {
 })
 
 app.post("/api/users", async (req, res) => {
-    console.log(req.body);
-    const body = req?.body;
-    const name = body?.name;
-    const email = body?.email;
-    const password = body?.password;
+    try {
+        const body = req?.body;
+        const name = body?.name;
+        const email = body?.email;
+        const password = body?.password;
 
-    userSchema.parse(body);
+        userSchema.parse(body);
 
-    const user = await postUser(name, email, password)
-    if (!user) res.json({ sucess: false });
-    res.json({ sucess: true })
+        const user = await postUser(name, email, password)
+        if (!user) return res.json({ sucess: false });
+        return res.json({ sucess: true })
+    }
+    catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Erro ao cadastrar tarefa" });
+    }
 })
 
 app.get("/api/tasks", async (req, res) => {

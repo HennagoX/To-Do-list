@@ -1,4 +1,5 @@
 const TASKS_URL = "http://localhost:3000/api/tasks";
+const USERS_URL = "http://localhost:3000/api/users";
 
 async function readResponse(response) {
     if (!response.ok) {
@@ -14,6 +15,20 @@ async function readResponse(response) {
 
     if (response.status === 204) return null;
     return response.json();
+}
+
+export async function getUsers() {
+    const response = await fetch(USERS_URL);
+    return readResponse(response);
+}
+
+export async function createUser(name, email, password) {
+    const response = await fetch(USERS_URL, {
+        method: "POST", headers: {
+            "Content-Type": "application/json"
+        }, body: JSON.stringify({ name: name, email: email, password: password })
+    });
+    return readResponse(response);
 }
 
 export async function getTasks() {
